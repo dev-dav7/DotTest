@@ -33,13 +33,11 @@ namespace DotTest.VK
         //Лог результатов отправки постов на стену
         List<WallPostResultModel> logSendResult = new List<WallPostResultModel>();
 
-        //Поток отправки постов
-        Task postTask;
+        //Флаг потока отправки постов
         bool postTaskWork = false;
 
         public VKApiUserController()
         {
-            postTask = new Task(PostSender);
         }
 
         /// <summary>
@@ -86,7 +84,7 @@ namespace DotTest.VK
             queueToSend.Add(sendPost);
             //Если поток загрузок был завершен, запускает его
             if (!postTaskWork)
-                postTask.Start();
+                new Task(PostSender).Start();
         }
 
 

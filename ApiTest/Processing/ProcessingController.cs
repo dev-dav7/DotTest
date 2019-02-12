@@ -16,12 +16,10 @@ namespace DotTest.Processing
         List<ProcessingResultModel> resultsProcessing = new List<ProcessingResultModel>();
 
         //Поток обработки
-        Task processingTask;
         bool processingTaskWork = false;
 
         public ProcessingController()
         {
-            processingTask = new Task(TextFrequencyProcessor);
         }
 
         /// <summary>
@@ -33,7 +31,7 @@ namespace DotTest.Processing
             processingQueue.Add(request);
             //Запуск потока рассчета если он был завршен
             if (!processingTaskWork)
-                processingTask.Start();
+                new Task(TextFrequencyProcessor).Start();
         }
 
         /// <summary>

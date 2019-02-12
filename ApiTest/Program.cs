@@ -28,33 +28,9 @@ namespace DotTest
             VKServiceController.Authorize(Config.VKAppServiceToken);
 
             MainMenu();
-
-            //Определение ID введенной записи
-            var s = Console.ReadLine();
-            var j = VKServiceController.DefineId(s);
-            Console.WriteLine(j.Item1 + " " + j.Item2);
-            VKServiceController.GetPosts(new GetPostsModel(j.Item1, j.Item2, Config.PostGetCount, ResultRequest));
-
-
-            Console.ReadLine();
         }
 
-        /// <summary>
-        /// Авторизация пользователя в приложении
-        /// </summary>
-        /// <param name="userApi"></param>
-        static void UserAuthorization(VKApiUserController userApi)
-        {
-            Console.WriteLine("Enter your login or email from VK:");
-            string login = Console.ReadLine();
-            Console.WriteLine("Enter your password from VK:");
-            string password = Utils.ReadPassword();
-            //Доступ к стене
-            Settings scope = Settings.Wall;
-            //Авторизация
-            userApi.Authorize(Config.VKAppID, login, password, scope);
 
-        }
 
         /// <summary>
         /// В этот метод приходят загруженные из вк посты
@@ -90,9 +66,13 @@ namespace DotTest
                 Console.WriteLine();
                 Console.WriteLine("Select section:");
                 Console.WriteLine("1 - Get post frequency by wall");
-                Console.WriteLine("2 - User");
+                if (VKUserController.userID.Item1)
+                    Console.WriteLine("2 - User authorize: id{0}", VKUserController.userID.Item2.ToString());
+                else
+                    Console.WriteLine("2 - User authorize: none authorize");
                 Console.WriteLine("3 - Set parameters");
-                Console.WriteLine("4 - Exit");
+                Console.WriteLine("4 - Log and result");
+                Console.WriteLine("5 - Exit");
                 Console.WriteLine("Enter code section:");
 
                 string str = Console.ReadLine();
@@ -107,7 +87,7 @@ namespace DotTest
                 }
                 else
                 {
-                    if (str == "4")
+                    if (str == "5")
                     {
                         Console.WriteLine("Close application");
                         System.Threading.Thread.Sleep(1000);
@@ -115,18 +95,88 @@ namespace DotTest
                     }
                     if (str == "1")
                     {
-                        //
+                        GetPostsMenu();
                     }
                     if (str == "2")
                     {
-                        //
+                        UserAuthorization(VKUserController);
                     }
                     if (str == "3")
                     {
                         ParametrsMenu();
                     }
+                    if (str == "4")
+                    {
+                        //
+                    }
                 }
             }
+        }
+
+        static void GetPostsMenu()
+        {
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine("Get post freuqency");
+            Console.WriteLine("Enter id and press enter");
+            Console.WriteLine("Enter '.'  instead of Id to exit");
+            string newId;
+            while (true)
+            {
+                newId = Console.ReadLine();
+                if (newId == null)
+                    Console.WriteLine("Please, enter not null request");
+                else
+                if (newId == ".")
+                    return;
+                else
+                if (!Utils.IsNormalString(newId).Item1)
+                    ConsoleInputError(Utils.IsNormalString(newId), newId);
+                else
+                {
+                    //Определение ID введенной записи
+                    var idInfo = VKServiceController.DefineId(newId);
+                    //Такого ID не сущесвтует
+                    if (idInfo.Item1 == WallTypeForRequest.Undefined)
+                        Console.WriteLine("Such id does not exist");
+                    //ID 
+                    if (idInfo.Item1 == WallTypeForRequest.Vague)
+                        Console.WriteLine("ID is not defined. (ID '0' not use.)");
+                    if (idInfo.Item1 == WallTypeForRequest.Public || idInfo.Item1 == WallTypeForRequest.User)
+                    {
+                        Console.WriteLine("User type: {0}, user id: {1}, posts requested: {2}", idInfo.Item1, idInfo.Item2, Config.PostGetCount);
+                        //Зарпос в вк
+                        VKServiceController.GetPosts(new GetPostsModel(idInfo.Item1, idInfo.Item2, Config.PostGetCount, ResultRequest));
+                    }
+                }
+                Console.WriteLine();
+            }
+        }
+
+        /// <summary>
+        /// Авторизация пользователя в приложении
+        /// </summary>
+        /// <param name="userApi"></param>
+        static void UserAuthorization(VKApiUserController userApi)
+        {
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine("User Authorization");
+            Console.WriteLine("Enter '.' instead of login to cancel");
+            Console.WriteLine("Enter your login or email from VK:");
+            string login = Console.ReadLine();
+            if (login == ".")
+            {
+                Console.WriteLine("Authorization was aborted");
+                return;
+            }
+            Console.WriteLine("Enter your password from VK:");
+            string password = Utils.ReadPassword();
+            //Доступ к стене
+            Settings scope = Settings.Wall;
+            //Авторизация
+            userApi.Authorize(Config.VKAppID, login, password, scope);
+
         }
 
         static void ParametrsMenu()
@@ -206,8 +256,8 @@ namespace DotTest
 
         static void ConsoleInputError(Tuple<bool, int> t, string s)
         {
-            if (s!=null)
-            Console.WriteLine("Invalid character entered. First invalid character: {0}.", s[t.Item2]);
+            if (s != null)
+                Console.WriteLine("Invalid character entered. First invalid character: {0}.", s[t.Item2]);
             else
                 Console.WriteLine("Invalid character entered. Null string.");
 

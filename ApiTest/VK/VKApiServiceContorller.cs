@@ -19,13 +19,11 @@ namespace DotTest.VK
         //Лог попыток загрузок
         List<ResultRequestLogModel> requestLog = new List<ResultRequestLogModel>();
 
-        //Поток загрузки
-        Task loadTask;
+        //Флаг потока загрузки
         bool loadTaskWork = false;
 
         public VKApiServiceContorller()
         {
-            loadTask = new Task(PostLoader);
         }
 
         /// <summary>
@@ -35,7 +33,7 @@ namespace DotTest.VK
         /// <returns>Прошла ли авторизация</returns>
         public bool Authorize(string ServiceToken)
         {
-    
+
             Console.WriteLine("Authorization attempt by service token");
             try
             {
@@ -143,9 +141,9 @@ namespace DotTest.VK
                 requestQueue.Add(requestPost);
             else
                 Console.WriteLine("Does not support this userType request, support only: {0}, {1}", WallTypeForRequest.User.ToString(), WallTypeForRequest.Public.ToString());
-            //Если поток загрузок был завершен, запускает его
+            //Если поток загрузок был завершен ранее, запускает его
             if (!loadTaskWork)
-                loadTask.Start();
+                new Task(PostLoader).Start();
         }
 
         /// <summary>
@@ -178,7 +176,7 @@ namespace DotTest.VK
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine("Posts loading failed: {0} id:{1}, error: {2}", currentLoad.userType, currentLoad.userId,  e.Message);
+                    Console.WriteLine("Posts loading failed: {0} id:{1}, error: {2}", currentLoad.userType, currentLoad.userId, e.Message);
                     //Запись в лог результата загрузки
                     AddToLogRequest(new ResultRequestLogModel(false, currentLoad, 0, e, DateTime.UtcNow));
                     //Удаление отработатнной записи
