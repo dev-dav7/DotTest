@@ -87,12 +87,13 @@ namespace DotTest
 
         /// <summary>
         /// Является-ли ASII код символа кодом доступного символа для сокращенного имени в ВК "." "_"
+        /// '-' для ввода отрицательных id (групп)
         /// </summary>
         /// <param name="asciiNumber"></param>
         /// <returns></returns>
         static bool IsOtherSymbol(int asciiNumber)
         {
-            return asciiNumber == 95 || asciiNumber == 46;//95 = "."; 46 == "."
+            return asciiNumber == 95 || asciiNumber == 46 || asciiNumber == 45;//95 = "."; 46 == "."; 45 == "-"
         }
 
         /// <summary>

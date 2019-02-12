@@ -15,6 +15,14 @@ namespace DotTest.Processing
         //Список результатов рассчетов
         List<ProcessingResultModel> resultsProcessing = new List<ProcessingResultModel>();
 
+        public List<ProcessingResultModel> ResultAll
+        {
+            get
+            {
+                return resultsProcessing;
+            }
+        }
+
         //Поток обработки
         bool processingTaskWork = false;
 
@@ -50,19 +58,36 @@ namespace DotTest.Processing
                 currentCalculaion = queueToProcessing.First();
 
                 //Очистить тексты от символов переноса строки
-
+                List<string> clearText = new List<string>();
+                foreach (var text in currentCalculaion.texts)
+                    clearText.Add(ClearString(text));
                 //Посчитать частотности букв
-
+                var result = FrequencyCalculator.CalcFrequency(clearText);
                 //Сохранение результата расчета
-
-                //currentCalculaion.resultDestintaion();
-
+                ProcessingResultModel resultProcessing = new ProcessingResultModel(currentCalculaion, result.Item1, result.Item2);
+                resultsProcessing.Add(resultProcessing);
+                //Отправка результата в пункт назначения
+                currentCalculaion.resultDestintaion(resultProcessing);
                 //Удаление из очереди рассчитанного текста
                 queueToProcessing.Remove(queueToProcessing.First());
-
-
             }
             processingTaskWork = false;
+        }
+
+        /// <summary>
+        /// Очищает текст от символов переноса строки
+        /// </summary>
+        /// <returns></returns>
+        string ClearString(string str)
+        {
+            if (str != null)
+            {
+                //Здесь также могут филтроваться другие конструкции
+                string clearString = str.Replace("\n", "");
+                clearString.ToLower();
+                return clearString;
+            }
+            return "";
         }
 
     }

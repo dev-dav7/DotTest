@@ -38,6 +38,7 @@ namespace DotTest
             TextProcessingController.getFrequency(new Processing.Models.ProcessingRequestModel(
                 processingModel.requestBody.userType.ToString(),
                 processingModel.requestBody.userId,
+                processingModel.name,
                 processingModel.requestBody.countPost,
                 processingModel.postsText,
                 processingModel.utcDateLoad,
@@ -51,7 +52,32 @@ namespace DotTest
         /// <param name="result"></param>
         public static void ResultProcessing(DotTest.Processing.Models.ProcessingResultModel result)
         {
-            
+            //Вывод в консоль
+            if (Config.OutToConsole)
+            {
+                Console.WriteLine();
+                Console.WriteLine("User type: {0}", result.request.type);
+                Console.WriteLine("User id: {0}", result.request.id);
+                Console.WriteLine("User name: {0}",result.request.name);
+                Console.WriteLine("Frequency for english alphabet:");
+                //result.request.name;
+                foreach (var x in result.en)
+                    x.ConsoleView(Config.roundTo);
+                Console.WriteLine();
+                Console.WriteLine("Frequency for russian alphabet:");
+                foreach (var x in result.ru)
+                    x.ConsoleView(Config.roundTo);
+                Console.WriteLine();
+            }
+
+            //Отправка поста в ВК
+            if (Config.OutToConsole)
+            {
+
+            }
+
+
+
         }
 
         #region Консольное меню
@@ -279,7 +305,23 @@ namespace DotTest
                 else
                 if (keyLog == "3")
                 {
-
+                    var results = TextProcessingController.ResultAll;
+                    foreach (var result in results)
+                    {
+                        Console.WriteLine();
+                        Console.WriteLine("User type: {0}", result.request.type);
+                        Console.WriteLine("User id: {0}", result.request.id);
+                        Console.WriteLine("User name: {0}", result.request.name);
+                        Console.WriteLine("Frequency for english alphabet:");
+                        //result.request.name;
+                        foreach (var x in result.en)
+                            x.ConsoleView(Config.roundTo);
+                        Console.WriteLine();
+                        Console.WriteLine("Frequency for russian alphabet:");
+                        foreach (var x in result.ru)
+                            x.ConsoleView(Config.roundTo);
+                        Console.WriteLine();
+                    }
                 }
                 else
                 if (keyLog == "4")

@@ -7,13 +7,15 @@ namespace DotTest.Processing.Models
     /// </summary>
     class ProcessingResultModel
     {
-        ProcessingRequestModel request;
-        List<FrequencyElement> frequencys;
+        public ProcessingRequestModel request;
+        public List<FrequencyResult> ru;
+        public List<FrequencyResult> en;
 
-        public ProcessingResultModel(ProcessingRequestModel _request, List<FrequencyElement> _frequencys)
+        public ProcessingResultModel(ProcessingRequestModel _request, List<FrequencyResult> _en, List<FrequencyResult> _ru)
         {
             request = _request;
-            frequencys = _frequencys;
+            ru = _ru;
+            en = _en;
         }
     }
 }

@@ -68,7 +68,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Config.cs" />
-    <Compile Include="Processing\Models\FrequencyElement.cs" />
+    <Compile Include="Processing\Models\FrequencyCalculator.cs" />
+    <Compile Include="Processing\Models\FrequencyResult.cs" />
     <Compile Include="Processing\Models\ProcessingRequestModel.cs" />
     <Compile Include="Processing\Models\ProcessingResultModel.cs" />
     <Compile Include="VK\Models\Log\SendingPostLogModel.cs" />
