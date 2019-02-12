@@ -36,7 +36,10 @@ namespace DotTest
         /// <returns></returns>
         static Tuple<bool, int> CheckThisString(string str, bool numCheck, bool enCheck, bool otherCheck)
         {
-            str = str.ToLower();
+            try
+            {
+                str = str.ToLower();
+         
             for (int i = 0; i < str.Count(); i++)
                 if (!(
                     (IsNumberSymbol((int)str[i]) && numCheck) ||
@@ -44,6 +47,12 @@ namespace DotTest
                     (IsOtherSymbol((int)str[i]) && otherCheck)))
                     return Tuple.Create(false, i);
             return Tuple.Create(true, -1);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return Tuple.Create(false, 0);
+            }
         }
 
         /// <summary>
