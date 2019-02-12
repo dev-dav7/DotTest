@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Globalization;
 
 namespace DotTest.Processing.Models
 {
@@ -20,6 +17,11 @@ namespace DotTest.Processing.Models
         public void ConsoleView(int round)
         {
             Console.Write("{0}:{1}   ",symbol, decimal.Round(frequency,round));
+        }
+
+        public string JSONView(int round, CultureInfo x)
+        {
+            return "'" + symbol + "': " + decimal.Round(frequency, round).ToString(x);
         }
     }
 }

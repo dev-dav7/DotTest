@@ -2,6 +2,9 @@
 using DotTest.VK;
 using DotTest.Processing;
 using VkNet.Enums.Filters;
+using System.Collections.Generic;
+using Newtonsoft.Json;
+using System.Globalization;
 
 namespace DotTest
 {
@@ -53,12 +56,13 @@ namespace DotTest
         public static void ResultProcessing(DotTest.Processing.Models.ProcessingResultModel result)
         {
             //Вывод в консоль
-            if (Config.OutToConsole)
+            if (Config.outToConsole)
             {
                 Console.WriteLine();
+                Console.WriteLine("User name: {0}", result.request.name);
                 Console.WriteLine("User type: {0}", result.request.type);
                 Console.WriteLine("User id: {0}", result.request.id);
-                Console.WriteLine("User name: {0}",result.request.name);
+                Console.WriteLine("Count posts: {0}", result.request.countPosts);
                 Console.WriteLine("Frequency for english alphabet:");
                 //result.request.name;
                 foreach (var x in result.en)
@@ -71,13 +75,29 @@ namespace DotTest
             }
 
             //Отправка поста в ВК
-            if (Config.OutToConsole)
-            {
+            if (Config.outToConsole)
+                if (VKController.userID.Item1)
+                {
+                    string message = result.request.name + ", статистика для последних " + result.request.countPosts + " постов: ";
+                    string en = JSONView(result.en);
+                    string ru = JSONView(result.ru);
+                    message = message + en + ' ' + ru;
+                    VKController.SendPostToWall(new VkNet.Model.RequestParams.WallPostParams { OwnerId = VKController.userID.Item2, Message = message});
+                }
+        }
 
-            }
-
-
-
+        /// <summary>
+        /// Приводит лист FrequencyResult к виду JSON-строки
+        /// </summary>
+        /// <param name="records"></param>
+        /// <returns></returns>
+        static string JSONView(List<Processing.Models.FrequencyResult> records)
+        {
+            string result = "{";
+            foreach (var rec in records)
+                result += rec.JSONView(Config.roundTo, CultureInfo.GetCultureInfo("en-US")) + ", ";
+            result = result.Substring(0, result.Length - 2) + '}';
+            return result;
         }
 
         #region Консольное меню
@@ -172,9 +192,9 @@ namespace DotTest
                         Console.WriteLine("ID is not defined. (ID '0' not use.)");
                     if (idInfo.Item1 == UserTypeForRequest.Public || idInfo.Item1 == UserTypeForRequest.User)
                     {
-                        Console.WriteLine("User type: {0}, user id: {1}, posts requested: {2}", idInfo.Item1, idInfo.Item2, Config.PostGetCount);
+                        Console.WriteLine("User type: {0}, user id: {1}, posts requested: {2}", idInfo.Item1, idInfo.Item2, Config.postGetCount);
                         //Зарпос в вк
-                        VKController.GetPosts(new RequestPostsModel(idInfo.Item1, idInfo.Item2, Config.PostGetCount, ResultRequest));
+                        VKController.GetPosts(new RequestPostsModel(idInfo.Item1, idInfo.Item2, Config.postGetCount, ResultRequest));
                     }
                 }
                 Console.WriteLine();
@@ -217,9 +237,9 @@ namespace DotTest
                 Console.WriteLine("Current AppID: {0}", Config.VKAppID);
                 Console.WriteLine("Current ServiceKey: {0}", Config.VKAppServiceToken);
                 Console.WriteLine();
-                Console.WriteLine("1 - Requested number of posts: {0}", Config.PostGetCount);
-                Console.WriteLine("2 - Place frequency to wall: {0}", Config.PostResult);
-                Console.WriteLine("3 - Print frequency to console: {0}", Config.OutToConsole);
+                Console.WriteLine("1 - Requested number of posts: {0}", Config.postGetCount);
+                Console.WriteLine("2 - Place frequency to wall: {0}", Config.outToWall);
+                Console.WriteLine("3 - Print frequency to console: {0}", Config.outToConsole);
                 Console.WriteLine("4 - Go to main menu");
                 Console.WriteLine();
                 Console.WriteLine("To set param 1, 2, 3 enter to console: <number param><.><new value>.");
@@ -254,26 +274,26 @@ namespace DotTest
                                     newValue = 1;
                                 if (newValue > 100)
                                     newValue = 100;
-                                Config.PostGetCount = newValue;
+                                Config.postGetCount = newValue;
                             }
                         }
                         if (words[0] == "2")
                         {
                             if (words[1] == "true")
-                                Config.PostResult = true;
+                                Config.outToWall = true;
                             else
                                 if (words[1] == "false")
-                                Config.PostResult = false;
+                                Config.outToWall = false;
                             else
                                 Console.WriteLine("Incorrect value");
                         }
                         if (words[0] == "3")
                         {
                             if (words[1] == "true")
-                                Config.OutToConsole = true;
+                                Config.outToConsole = true;
                             else
                                if (words[1] == "false")
-                                Config.OutToConsole = false;
+                                Config.outToConsole = false;
                             else
                                 Console.WriteLine("Incorrect value");
                         }
