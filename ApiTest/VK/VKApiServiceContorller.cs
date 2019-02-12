@@ -8,10 +8,10 @@ using VkNet.Model.RequestParams;
 
 namespace DotTest.VK
 {
-    class VKApiContorller
+    class VKApiServiceContorller
     {
-        //Объект api для рабоыт
-        VkApi api = new VkApi();
+        //Объект api для работы
+        VkApi apiService = new VkApi();
 
         //Очередь на загрузку
         List<GetPostsModel> requestQueue = new List<GetPostsModel>();
@@ -23,7 +23,7 @@ namespace DotTest.VK
         Task loadTask;
         bool loadTaskWork = false;
 
-        public VKApiContorller()
+        public VKApiServiceContorller()
         {
             loadTask = new Task(PostLoader);
         }
@@ -35,15 +35,16 @@ namespace DotTest.VK
         /// <returns>Прошла ли авторизация</returns>
         public bool Authorize(string ServiceToken)
         {
+    
             Console.WriteLine("Authorization attempt by service token");
             try
             {
-                api.Authorize(new ApiAuthParams()
+                apiService.Authorize(new ApiAuthParams()
                 {
                     AccessToken = ServiceToken
                 });
                 //Проверка доступности сервисов
-                var x = api.Utils.ResolveScreenName("1");
+                var x = apiService.Utils.ResolveScreenName("1");
                 Console.WriteLine("Authorization success");
                 return true;
             }
@@ -53,6 +54,7 @@ namespace DotTest.VK
                 Console.WriteLine("Authorization failed");
                 return false;
             }
+
         }
 
         /// <summary>
@@ -111,7 +113,7 @@ namespace DotTest.VK
             //Проврека есть ли такое короткое имя
             try
             {
-                var x = api.Utils.ResolveScreenName(strId);
+                var x = apiService.Utils.ResolveScreenName(strId);
                 if (x != null)
                 {
                     if (x.Type == VkNet.Enums.VkObjectType.User)
@@ -136,9 +138,11 @@ namespace DotTest.VK
         /// <param name="requestPost"></param>
         public void GetPosts(GetPostsModel requestPost)
         {
-           //Добавление в очередь загрузок
-           if (requestPost.userType == WallTypeForRequest.Public || requestPost.userType == WallTypeForRequest.User)
+            //Добавление в очередь загрузок
+            if (requestPost.userType == WallTypeForRequest.Public || requestPost.userType == WallTypeForRequest.User)
                 requestQueue.Add(requestPost);
+            else
+                Console.WriteLine("Does not support this userType request, support only: {0}, {1}", WallTypeForRequest.User.ToString(), WallTypeForRequest.Public.ToString());
             //Если поток загрузок был завершен, запускает его
             if (!loadTaskWork)
                 loadTask.Start();
@@ -163,7 +167,7 @@ namespace DotTest.VK
                 //Загрузка постов
                 try
                 {
-                    var wallPosts = api.Wall.Get(new WallGetParams { OwnerId = ownerId, Count = Convert.ToUInt64(currentLoad.countPost) });
+                    var wallPosts = apiService.Wall.Get(new WallGetParams { OwnerId = ownerId, Count = Convert.ToUInt64(currentLoad.countPost) });
                     Console.WriteLine("Posts loading success: {0} id:{1}, count of loaded posts:{2}", currentLoad.userType, currentLoad.userId, wallPosts.WallPosts.Count());
                     //Отправка постов в обработку
                     currentLoad.textProcessor(new Models.FLoadTProcessingModel(wallPosts, currentLoad, DateTime.UtcNow));
@@ -174,7 +178,7 @@ namespace DotTest.VK
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine("Posts loading failed: {0} id:{1}, exception: {2}", currentLoad.userType, currentLoad.userId,  e.Message);
+                    Console.WriteLine("Posts loading failed: {0} id:{1}, error: {2}", currentLoad.userType, currentLoad.userId,  e.Message);
                     //Запись в лог результата загрузки
                     AddToLogRequest(new ResultRequestLogModel(false, currentLoad, 0, e, DateTime.UtcNow));
                     //Удаление отработатнной записи

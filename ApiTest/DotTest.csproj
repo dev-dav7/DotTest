@@ -73,6 +73,7 @@
     <Compile Include="Processing\Models\FrequencyElement.cs" />
     <Compile Include="Processing\Models\ProcessingRequestModel.cs" />
     <Compile Include="Processing\Models\ProcessingResultModel.cs" />
+    <Compile Include="Processing\Models\WallPostResultModel.cs" />
     <Compile Include="Processing\ProcessingController.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -81,7 +82,8 @@
     <Compile Include="VK\Models\GetPostsModel.cs" />
     <Compile Include="VK\Models\ResultRequestLogModel.cs" />
     <Compile Include="VK\Models\WallTypeForRequest.cs" />
-    <Compile Include="VK\VKApiContorller.cs" />
+    <Compile Include="VK\VKApiServiceContorller.cs" />
+    <Compile Include="VK\VKApiUserController.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

@@ -52,8 +52,8 @@ namespace DotTest.Processing
                 currentCalculaion = processingQueue.First();
 
                 //Очистить тексты от символов переноса строки
-
-                //Посчиать частотности букв
+                
+                //Посчитать частотности букв
 
                 //Сохранение результата расчета
 
