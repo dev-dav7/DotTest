@@ -154,6 +154,9 @@ namespace DotTest
                 if (str == "4")
                     MainMenu();
                 else
+                if (str.Length < 3)
+                    Console.WriteLine("Incorrect entered");
+                else
                 {
                     string[] words = str.Split(new char[] { '.' });
                     if (words[0].Length > 1)
