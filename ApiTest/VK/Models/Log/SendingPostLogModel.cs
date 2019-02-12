@@ -8,9 +8,9 @@ using VkNet.Model.RequestParams;
 namespace DotTest.Processing.Models
 {
     /// <summary>
-    /// Модель данных для отправки постов на стену
+    /// Модель данных для отправки поста на стену
     /// </summary>
-    class WallPostResultModel
+    class SendingPostLogModel
     {
         public WallPostParams post;//Пост который отправляли
         public DateTime date;//Время создания записи лога Utc
@@ -24,7 +24,7 @@ namespace DotTest.Processing.Models
         /// <param name="_date">UTC Time</param>
         /// <param name="_sendResult"></param>
         /// <param name="_error"></param>
-       public WallPostResultModel(WallPostParams _post, DateTime _date, bool _sendResult, Exception _error)
+       public SendingPostLogModel(WallPostParams _post, DateTime _date, bool _sendResult, Exception _error)
         {
             post = _post;
             date = _date;

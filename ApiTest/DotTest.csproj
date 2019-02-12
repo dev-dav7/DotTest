@@ -68,22 +68,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Config.cs" />
-    <Compile Include="Processing\Alphabets\AlphabetController.cs" />
-    <Compile Include="Processing\Alphabets\Models\AlphabetModel.cs" />
     <Compile Include="Processing\Models\FrequencyElement.cs" />
     <Compile Include="Processing\Models\ProcessingRequestModel.cs" />
     <Compile Include="Processing\Models\ProcessingResultModel.cs" />
-    <Compile Include="Processing\Models\WallPostResultModel.cs" />
-    <Compile Include="Processing\ProcessingController.cs" />
+    <Compile Include="VK\Models\Log\SendingPostLogModel.cs" />
+    <Compile Include="Processing\TextProcessingController.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils.cs" />
-    <Compile Include="VK\Models\FLoadTProcessingModel.cs" />
-    <Compile Include="VK\Models\GetPostsModel.cs" />
-    <Compile Include="VK\Models\ResultRequestLogModel.cs" />
-    <Compile Include="VK\Models\WallTypeForRequest.cs" />
-    <Compile Include="VK\VKApiServiceContorller.cs" />
-    <Compile Include="VK\VKApiUserController.cs" />
+    <Compile Include="VK\Models\DataToProcessingModel.cs" />
+    <Compile Include="VK\Models\RequestPostsModel.cs" />
+    <Compile Include="VK\Models\Log\DonwloadLogModel.cs" />
+    <Compile Include="VK\Models\UserTypeForRequest.cs" />
+    <Compile Include="VK\VKApiContorller.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

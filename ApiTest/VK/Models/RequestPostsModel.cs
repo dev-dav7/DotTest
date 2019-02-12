@@ -9,17 +9,17 @@ namespace DotTest.VK
     /// <summary>
     /// Модель данных запроса постов с стены вк
     /// </summary>
-    class GetPostsModel
+    class RequestPostsModel
     {
         //Ссылка на метод в который отправляются данные после загрузки
-        public delegate void TextProcessor(DotTest.VK.Models.FLoadTProcessingModel processingModel);
+        public delegate void TextProcessor(DotTest.VK.Models.DataToProcessingModel processingModel);
 
-        public WallTypeForRequest userType;
+        public UserTypeForRequest userType;
         public long userId;
         public int countPost;
         public TextProcessor textProcessor;
 
-        public GetPostsModel(WallTypeForRequest _userType, long _userId, int _countPost, TextProcessor x) 
+        public RequestPostsModel(UserTypeForRequest _userType, long _userId, int _countPost, TextProcessor x) 
         {
             userType = _userType;
             userId = _userId;

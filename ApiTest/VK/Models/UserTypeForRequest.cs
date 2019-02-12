@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace DotTest.VK
 {
-    enum WallTypeForRequest
+    enum UserTypeForRequest
     {
         User,
         Public,
         Undefined,//Такого id не сущетсвует
-        Vague//id может быть как user так и public
+        Vague//id неопределенный или 0
     }
 }

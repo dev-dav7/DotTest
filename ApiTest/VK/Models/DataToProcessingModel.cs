@@ -5,15 +5,15 @@ using VkNet.Model;
 namespace DotTest.VK.Models
 {
     /// <summary>
-    /// Модель данных результата загрузки
+    /// Модель загруженных данных , для отправки в обработку
     /// </summary>
-    class FLoadTProcessingModel
+    class DataToProcessingModel
     {
         public List<string> postsText = new List<string>();
-        public GetPostsModel requestBody;
+        public RequestPostsModel requestBody;
         public DateTime utcDateLoad;
 
-        public FLoadTProcessingModel(WallGetObject wallObject , GetPostsModel baseRequest, DateTime time)
+        public DataToProcessingModel(WallGetObject wallObject , RequestPostsModel baseRequest, DateTime time)
         {
             requestBody = baseRequest;
             utcDateLoad = time;

@@ -10,13 +10,10 @@ namespace DotTest
         static Random r = new Random();
 
         //Создание объекта, выполняющего обработку текста
-        static ProcessingController TextProcessingController = new ProcessingController();
+        static TextProcessingController TextProcessingController = new TextProcessingController();
 
-        //Создание объекта для работы с VK API со стороны приложения
-        static VKApiServiceContorller VKServiceController = new VKApiServiceContorller();
-
-        //Создание объекта для работы с VK API со стороны пользователя
-        static VKApiUserController VKUserController = new VKApiUserController();
+        //Создание объекта для работы с VK API 
+        static VKApiContorller VKController = new VKApiContorller();
 
         static void Main(string[] args)
         {
@@ -25,18 +22,16 @@ namespace DotTest
             Config.LoadConfig();
             Console.WriteLine();
             //Авторизация в API по сервис-ключу
-            VKServiceController.Authorize(Config.VKAppServiceToken);
+            VKController.Authorize(Config.VKAppServiceToken);
 
             MainMenu();
         }
-
-
 
         /// <summary>
         /// В этот метод приходят загруженные из вк посты
         /// </summary>
         /// <param name="processingModel"></param>
-        public static void ResultRequest(DotTest.VK.Models.FLoadTProcessingModel processingModel)
+        public static void ResultRequest(DotTest.VK.Models.DataToProcessingModel processingModel)
         {
             //Пост был загружен из ВК и передан сюда
             //Отпралвяем пост на обработку
@@ -45,7 +40,8 @@ namespace DotTest
                 processingModel.requestBody.userId,
                 processingModel.requestBody.countPost,
                 processingModel.postsText,
-                processingModel.utcDateLoad
+                processingModel.utcDateLoad,
+                ResultProcessing
                 ));
         }
 
@@ -55,9 +51,10 @@ namespace DotTest
         /// <param name="result"></param>
         public static void ResultProcessing(DotTest.Processing.Models.ProcessingResultModel result)
         {
-
+            
         }
 
+        #region Консольное меню
         static void MainMenu()
         {
             while (true)
@@ -66,8 +63,10 @@ namespace DotTest
                 Console.WriteLine();
                 Console.WriteLine("Select section:");
                 Console.WriteLine("1 - Get post frequency by wall");
-                if (VKUserController.userID.Item1)
-                    Console.WriteLine("2 - User authorize: id{0}", VKUserController.userID.Item2.ToString());
+                //if (VKUserController.userID.Item1)
+                //    Console.WriteLine("2 - User authorize: id{0}", VKUserController.userID.Item2.ToString());
+                if (VKController.userID.Item1)
+                    Console.WriteLine("2 - User authorize: id{0}", VKController.userID.Item2.ToString());
                 else
                     Console.WriteLine("2 - User authorize: none authorize");
                 Console.WriteLine("3 - Set parameters");
@@ -99,7 +98,7 @@ namespace DotTest
                     }
                     if (str == "2")
                     {
-                        UserAuthorization(VKUserController);
+                        UserAuthorization(VKController);
                     }
                     if (str == "3")
                     {
@@ -107,7 +106,7 @@ namespace DotTest
                     }
                     if (str == "4")
                     {
-                        //
+                        LogMenu();
                     }
                 }
             }
@@ -135,18 +134,18 @@ namespace DotTest
                 else
                 {
                     //Определение ID введенной записи
-                    var idInfo = VKServiceController.DefineId(newId);
+                    var idInfo = VKController.DefineId(newId);
                     //Такого ID не сущесвтует
-                    if (idInfo.Item1 == WallTypeForRequest.Undefined)
+                    if (idInfo.Item1 == UserTypeForRequest.Undefined)
                         Console.WriteLine("Such id does not exist");
                     //ID 
-                    if (idInfo.Item1 == WallTypeForRequest.Vague)
+                    if (idInfo.Item1 == UserTypeForRequest.Vague)
                         Console.WriteLine("ID is not defined. (ID '0' not use.)");
-                    if (idInfo.Item1 == WallTypeForRequest.Public || idInfo.Item1 == WallTypeForRequest.User)
+                    if (idInfo.Item1 == UserTypeForRequest.Public || idInfo.Item1 == UserTypeForRequest.User)
                     {
                         Console.WriteLine("User type: {0}, user id: {1}, posts requested: {2}", idInfo.Item1, idInfo.Item2, Config.PostGetCount);
                         //Зарпос в вк
-                        VKServiceController.GetPosts(new GetPostsModel(idInfo.Item1, idInfo.Item2, Config.PostGetCount, ResultRequest));
+                        VKController.GetPosts(new RequestPostsModel(idInfo.Item1, idInfo.Item2, Config.PostGetCount, ResultRequest));
                     }
                 }
                 Console.WriteLine();
@@ -157,7 +156,7 @@ namespace DotTest
         /// Авторизация пользователя в приложении
         /// </summary>
         /// <param name="userApi"></param>
-        static void UserAuthorization(VKApiUserController userApi)
+        static void UserAuthorization(VKApiContorller userApi)
         {
             Console.WriteLine();
             Console.WriteLine();
@@ -254,6 +253,45 @@ namespace DotTest
             }
         }
 
+        static void LogMenu()
+        {
+            string keyLog = "";
+            while (true)
+            {
+                Console.WriteLine();
+                Console.WriteLine();
+                Console.WriteLine("Select a list of logs to display");
+                Console.WriteLine("1 - result download request log");
+                Console.WriteLine("2 - result sending posts log");
+                Console.WriteLine("3 - result calculation");
+                Console.WriteLine("4 - to main menu");
+                Console.WriteLine("Enter log section number:");
+                keyLog = Console.ReadLine();
+                if (keyLog == "1")
+                {
+
+                }
+                else
+                if (keyLog == "2")
+                {
+
+                }
+                else
+                if (keyLog == "3")
+                {
+
+                }
+                else
+                if (keyLog == "4")
+                {
+                    MainMenu();
+                }
+                else
+                    Console.WriteLine("Incorrect section entered");
+            }
+        }
+
+
         static void ConsoleInputError(Tuple<bool, int> t, string s)
         {
             if (s != null)
@@ -262,5 +300,6 @@ namespace DotTest
                 Console.WriteLine("Invalid character entered. Null string.");
 
         }
+        #endregion
     }
 }

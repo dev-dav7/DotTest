@@ -6,11 +6,11 @@ using DotTest.Processing.Models;
 
 namespace DotTest.Processing
 {
-    class ProcessingController
+    class TextProcessingController
     {
 
         //Очередь запрсов
-        List<ProcessingRequestModel> processingQueue = new List<ProcessingRequestModel>();
+        List<ProcessingRequestModel> queueToProcessing = new List<ProcessingRequestModel>();
 
         //Список результатов рассчетов
         List<ProcessingResultModel> resultsProcessing = new List<ProcessingResultModel>();
@@ -18,7 +18,7 @@ namespace DotTest.Processing
         //Поток обработки
         bool processingTaskWork = false;
 
-        public ProcessingController()
+        public TextProcessingController()
         {
         }
 
@@ -28,7 +28,7 @@ namespace DotTest.Processing
         public void getFrequency(ProcessingRequestModel request)
         {
             //Добавление в очередь загрузок
-            processingQueue.Add(request);
+            queueToProcessing.Add(request);
             //Запуск потока рассчета если он был завршен
             if (!processingTaskWork)
                 new Task(TextFrequencyProcessor).Start();
@@ -44,19 +44,21 @@ namespace DotTest.Processing
             processingTaskWork = true;
 
             ProcessingRequestModel currentCalculaion;
-            while (processingQueue.Count > 0)
+            while (queueToProcessing.Count > 0)
             {
                 //Обрабатыват первый запрос в очереди
-                currentCalculaion = processingQueue.First();
+                currentCalculaion = queueToProcessing.First();
 
                 //Очистить тексты от символов переноса строки
-                
+
                 //Посчитать частотности букв
 
                 //Сохранение результата расчета
 
+                //currentCalculaion.resultDestintaion();
+
                 //Удаление из очереди рассчитанного текста
-                processingQueue.Remove(processingQueue.First());
+                queueToProcessing.Remove(queueToProcessing.First());
 
 
             }

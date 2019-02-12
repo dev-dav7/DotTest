@@ -7,17 +7,17 @@ using System.Threading.Tasks;
 namespace DotTest.VK
 {
     /// <summary>
-    /// Модель данных записи в лог результата запроса постов со стены в вк
+    /// Модель данных результата загрузки
     /// </summary>
-    class ResultRequestLogModel
+    class DonwloadLogModel
     {
         public bool successComplite;
         public Exception exception;
-        public GetPostsModel requestBody;
+        public RequestPostsModel requestBody;
         public int countLoadedPost;
         public DateTime utcDateLoad;
         
-        public ResultRequestLogModel(bool resultLoad, GetPostsModel baseRequest, int _countLoadedPost, Exception e, DateTime time)
+        public DonwloadLogModel(bool resultLoad, RequestPostsModel baseRequest, int _countLoadedPost, Exception e, DateTime time)
         {
             successComplite = resultLoad;
             exception = e;
