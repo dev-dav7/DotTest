@@ -1,8 +1,9 @@
 ﻿
+using DotTest.Processing.Models;
 using System;
 using System.Collections.Generic;
 
-namespace DotTest.Processing.Models
+namespace DotTest.Processing
 {
     static class FrequencyCalculator
     {
