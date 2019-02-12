@@ -14,8 +14,8 @@ namespace DotTest.Processing.Models
     {
         public WallPostParams post;//Пост который отправляли
         public DateTime date;//Время создания записи лога Utc
-        public bool succesComplitel;//Успешность загрузки
-        public Exception error;//Ошибка отправки если такая была
+        public bool successComplite;//Успешность загрузки
+        public Exception exception;//Ошибка отправки если такая была
 
         /// <summary>
         /// 
@@ -28,8 +28,19 @@ namespace DotTest.Processing.Models
         {
             post = _post;
             date = _date;
-            succesComplitel = _sendResult;
-            error = _error;
+            successComplite = _sendResult;
+            exception = _error;
         }  
+
+        /// <summary>
+        /// Вывод в консоль
+        /// </summary>
+        public void ConsoleView()
+        {
+            if (successComplite)
+                Console.WriteLine("Post to ID{0} succes in UTC{1}", post.OwnerId, date);
+            else
+                Console.WriteLine("Post to ID{0} failed in UTC{1}, error:{2}", post.OwnerId, date, exception.Message);
+        }
     }
 }

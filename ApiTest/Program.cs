@@ -295,11 +295,20 @@ namespace DotTest
                 keyLog = Console.ReadLine();
                 if (keyLog == "1")
                 {
-
+                    var donwloadLog = VKController.DownloadLog;
+                    Console.WriteLine("Download log:");
+                    foreach (var log in donwloadLog)
+                        log.ConsoleView();
+                    Console.WriteLine();
                 }
                 else
                 if (keyLog == "2")
                 {
+                    var sendLog = VKController.SendLog;
+                    Console.WriteLine("Sending log:");
+                    foreach (var log in sendLog)
+                        log.ConsoleView();
+                    Console.WriteLine();
 
                 }
                 else
@@ -313,7 +322,6 @@ namespace DotTest
                         Console.WriteLine("User id: {0}", result.request.id);
                         Console.WriteLine("User name: {0}", result.request.name);
                         Console.WriteLine("Frequency for english alphabet:");
-                        //result.request.name;
                         foreach (var x in result.en)
                             x.ConsoleView(Config.roundTo);
                         Console.WriteLine();
