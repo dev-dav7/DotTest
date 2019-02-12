@@ -34,7 +34,7 @@ namespace DotTest.VK
             if (successComplite)
                 Console.WriteLine("Download data from {4} ID{0} succes in UTC {1}, count loaded/request posts:{2}/{3}", requestBody.userId, utcDateLoad, countLoadedPost, requestBody.countPost, requestBody.userType);
             else
-                Console.WriteLine("Download data from {4} ID{0} failed in UTC {1}, error:{2}", requestBody.userId, utcDateLoad, exception.Message, requestBody.userType);
+                Console.WriteLine("Download data from {3} ID{0} failed in UTC {1}, error:{2}", requestBody.userId, utcDateLoad, exception.Message, requestBody.userType);
         }
     }
 }

@@ -14,16 +14,14 @@ namespace DotTest
         public static bool PostResult = false;//Печатать ли результат на стену
         public static bool OutToConsole = true;//Выводить ли в консоль
         public static int PostGetCount = 5;//Количество запрашиваемых постов
-        public static int roundTo = 5;//Округление при выводе
+        public static int roundTo = 6;//Округление при выводе
 
         public static void LoadConfig()
         {
-
         }
 
         public static void SaveConfig()
         {
-
         }
     }
 }

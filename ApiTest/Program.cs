@@ -85,6 +85,7 @@ namespace DotTest
         {
             while (true)
             {
+                //Console.Clear();
                 Console.WriteLine();
                 Console.WriteLine();
                 Console.WriteLine("Select section:");
@@ -101,6 +102,7 @@ namespace DotTest
                 Console.WriteLine("Enter code section:");
 
                 string str = Console.ReadLine();
+                Console.Clear();
                 //Тут допустимы только цифры
                 var cr = Utils.IsNumericString(str);
                 if (cr.Item1 == false)
@@ -149,7 +151,8 @@ namespace DotTest
             while (true)
             {
                 newId = Console.ReadLine();
-                if (newId == null)
+                Console.Clear();
+                if (newId == null || newId == "")
                     Console.WriteLine("Please, enter not null request");
                 else
                 if (newId == ".")
@@ -222,6 +225,7 @@ namespace DotTest
                 Console.WriteLine("To set param 1, 2, 3 enter to console: <number param><.><new value>.");
                 Console.WriteLine("Param type: 1 - int: min 1, max 100; 2, 3  boolen: true or false.");
                 string str = Console.ReadLine();
+                Console.Clear();
                 var cr = Utils.IsNormalString(str);
                 if (cr.Item1 == false)
                     ConsoleInputError(cr, str);
@@ -273,6 +277,7 @@ namespace DotTest
                             else
                                 Console.WriteLine("Incorrect value");
                         }
+                        //Сохранить изменения
                         Config.SaveConfig();
                     }
                 }
@@ -293,6 +298,7 @@ namespace DotTest
                 Console.WriteLine("4 - to main menu");
                 Console.WriteLine("Enter log section number:");
                 keyLog = Console.ReadLine();
+                Console.Clear();
                 if (keyLog == "1")
                 {
                     var donwloadLog = VKController.DownloadLog;
@@ -314,6 +320,8 @@ namespace DotTest
                 else
                 if (keyLog == "3")
                 {
+                    Console.WriteLine("Result calcultaions:");
+
                     var results = TextProcessingController.ResultAll;
                     foreach (var result in results)
                     {
