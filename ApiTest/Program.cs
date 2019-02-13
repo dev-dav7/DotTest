@@ -10,8 +10,6 @@ namespace DotTest
 {
     class Program
     {
-        static Random r = new Random();
-
         //Создание объекта, выполняющего обработку текста
         static TextProcessingController TextProcessingController = new TextProcessingController();
 
@@ -20,13 +18,10 @@ namespace DotTest
 
         static void Main(string[] args)
         {
-            //Загрузка конфигурации
-            Console.WriteLine("Load config");
-            Config.LoadConfig();
-            Console.WriteLine();
             //Авторизация в API по сервис-ключу
             VKController.Authorize(Config.VKAppServiceToken);
 
+            //Вывод консольного меню
             MainMenu();
         }
 
@@ -64,13 +59,13 @@ namespace DotTest
                 Console.WriteLine("User id: {0}", result.request.id);
                 Console.WriteLine("Count posts: {0}", result.request.countPosts);
                 Console.WriteLine("Frequency for english alphabet:");
-                //result.request.name;
                 foreach (var x in result.en)
                     x.ConsoleView(Config.roundTo);
                 Console.WriteLine();
                 Console.WriteLine("Frequency for russian alphabet:");
                 foreach (var x in result.ru)
                     x.ConsoleView(Config.roundTo);
+                Console.WriteLine();
                 Console.WriteLine();
             }
 
@@ -82,7 +77,7 @@ namespace DotTest
                     string en = JSONView(result.en);
                     string ru = JSONView(result.ru);
                     message = message + en + ' ' + ru;
-                    VKController.SendPostToWall(new VkNet.Model.RequestParams.WallPostParams { OwnerId = VKController.userID.Item2, Message = message});
+                    VKController.SendPostToWall(new VkNet.Model.RequestParams.WallPostParams { OwnerId = VKController.userID.Item2, Message = message });
                 }
         }
 
@@ -105,13 +100,9 @@ namespace DotTest
         {
             while (true)
             {
-                //Console.Clear();
-                Console.WriteLine();
-                Console.WriteLine();
+                Console.WriteLine("*Main menu*");
                 Console.WriteLine("Select section:");
                 Console.WriteLine("1 - Get post frequency by wall");
-                //if (VKUserController.userID.Item1)
-                //    Console.WriteLine("2 - User authorize: id{0}", VKUserController.userID.Item2.ToString());
                 if (VKController.userID.Item1)
                     Console.WriteLine("2 - User authorize: id{0}", VKController.userID.Item2.ToString());
                 else
@@ -160,13 +151,14 @@ namespace DotTest
             }
         }
 
+        /// <summary>
+        /// Меню для запроса постов со стены вк
+        /// </summary>
         static void GetPostsMenu()
         {
-            Console.WriteLine();
-            Console.WriteLine();
-            Console.WriteLine("Get post freuqency");
-            Console.WriteLine("Enter id and press enter");
-            Console.WriteLine("Enter '.'  instead of Id to exit");
+            Console.WriteLine("*Request frequency char from wallpost*");
+            Console.WriteLine("Enter id or short name and press enter");
+            Console.WriteLine("To exit enter '.' ");
             string newId;
             while (true)
             {
@@ -186,10 +178,10 @@ namespace DotTest
                     var idInfo = VKController.DefineId(newId);
                     //Такого ID не сущесвтует
                     if (idInfo.Item1 == UserTypeForRequest.Undefined)
-                        Console.WriteLine("Such id does not exist");
+                        Console.WriteLine("Such '{0}' id does not exist", newId);
                     //ID 
                     if (idInfo.Item1 == UserTypeForRequest.Vague)
-                        Console.WriteLine("ID is not defined. (ID '0' not use.)");
+                        Console.WriteLine("ID '{0}' is not defined. (ID '0' not use.)", newId);
                     if (idInfo.Item1 == UserTypeForRequest.Public || idInfo.Item1 == UserTypeForRequest.User)
                     {
                         Console.WriteLine("User type: {0}, user id: {1}, posts requested: {2}", idInfo.Item1, idInfo.Item2, Config.postGetCount);
@@ -207,9 +199,7 @@ namespace DotTest
         /// <param name="userApi"></param>
         static void UserAuthorization(VKApiContorller userApi)
         {
-            Console.WriteLine();
-            Console.WriteLine();
-            Console.WriteLine("User Authorization");
+            Console.WriteLine("*User Authorization*");
             Console.WriteLine("Enter '.' instead of login to cancel");
             Console.WriteLine("Enter your login or email from VK:");
             string login = Console.ReadLine();
@@ -227,23 +217,25 @@ namespace DotTest
 
         }
 
+        /// <summary>
+        /// Консольное меню для вывода и изменения параметров
+        /// </summary>
         static void ParametrsMenu()
         {
             while (true)
             {
-                Console.WriteLine();
-                Console.WriteLine();
-                Console.WriteLine("Current parametrs:");
+                Console.WriteLine("*Current parametrs*");
                 Console.WriteLine("Current AppID: {0}", Config.VKAppID);
                 Console.WriteLine("Current ServiceKey: {0}", Config.VKAppServiceToken);
                 Console.WriteLine();
                 Console.WriteLine("1 - Requested number of posts: {0}", Config.postGetCount);
                 Console.WriteLine("2 - Place frequency to wall: {0}", Config.outToWall);
                 Console.WriteLine("3 - Print frequency to console: {0}", Config.outToConsole);
-                Console.WriteLine("4 - Go to main menu");
                 Console.WriteLine();
-                Console.WriteLine("To set param 1, 2, 3 enter to console: <number param><.><new value>.");
-                Console.WriteLine("Param type: 1 - int: min 1, max 100; 2, 3  boolen: true or false.");
+                Console.WriteLine("To set parametr 1, 2, 3 enter to console: <number param><.><new value>");
+                Console.WriteLine("Parametr type: 1 - int: min 1, max 100; 2, 3  boolen: true or false");
+                Console.WriteLine("Enter '4' to go to main menu");
+                Console.WriteLine("Enter request:");
                 string str = Console.ReadLine();
                 Console.Clear();
                 var cr = Utils.IsNormalString(str);
@@ -254,12 +246,18 @@ namespace DotTest
                     MainMenu();
                 else
                 if (str.Length < 3)
+                {
                     Console.WriteLine("Incorrect entered");
+                    Console.WriteLine();
+                }
                 else
                 {
                     string[] words = str.Split(new char[] { '.' });
                     if (words[0].Length > 1)
+                    {
                         Console.WriteLine("Incorrect section entered");
+                        Console.WriteLine();
+                    }
                     else
                     {
                         if (words[0] == "1")
@@ -285,7 +283,10 @@ namespace DotTest
                                 if (words[1] == "false")
                                 Config.outToWall = false;
                             else
+                            {
                                 Console.WriteLine("Incorrect value");
+                                Console.WriteLine();
+                            }
                         }
                         if (words[0] == "3")
                         {
@@ -295,7 +296,10 @@ namespace DotTest
                                if (words[1] == "false")
                                 Config.outToConsole = false;
                             else
+                            {
                                 Console.WriteLine("Incorrect value");
+                                Console.WriteLine();
+                            }
                         }
                         //Сохранить изменения
                         Config.SaveConfig();
@@ -304,13 +308,14 @@ namespace DotTest
             }
         }
 
+        /// <summary>
+        /// Консольное меню для вывода логов
+        /// </summary>
         static void LogMenu()
         {
             string keyLog = "";
             while (true)
             {
-                Console.WriteLine();
-                Console.WriteLine();
                 Console.WriteLine("Select a list of logs to display");
                 Console.WriteLine("1 - result download request log");
                 Console.WriteLine("2 - result sending posts log");
@@ -358,6 +363,7 @@ namespace DotTest
                             x.ConsoleView(Config.roundTo);
                         Console.WriteLine();
                     }
+                    Console.WriteLine();
                 }
                 else
                 if (keyLog == "4")
@@ -365,18 +371,25 @@ namespace DotTest
                     MainMenu();
                 }
                 else
+                {
                     Console.WriteLine("Incorrect section entered");
+                    Console.WriteLine();
+                }
             }
         }
 
-
+        /// <summary>
+        /// Вывод информации об обнаружении некорректнго символа в строке
+        /// </summary>
+        /// <param name="t"></param>
+        /// <param name="s"></param>
         static void ConsoleInputError(Tuple<bool, int> t, string s)
         {
             if (s != null)
-                Console.WriteLine("Invalid character entered. First invalid character: {0}.", s[t.Item2]);
+                Console.WriteLine("Invalid character entered. First invalid character: '{0}'", s[t.Item2]);
             else
                 Console.WriteLine("Invalid character entered. Null string.");
-
+            Console.WriteLine();
         }
         #endregion
     }
