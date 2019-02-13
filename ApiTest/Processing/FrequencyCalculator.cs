@@ -1,5 +1,4 @@
-﻿
-using DotTest.Processing.Models;
+﻿using DotTest.Processing.Models;
 using System;
 using System.Collections.Generic;
 

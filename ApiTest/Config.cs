@@ -1,7 +1,4 @@
-﻿
-using System.IO;
-
-namespace DotTest
+﻿namespace DotTest
 {
     public static class Config
     {

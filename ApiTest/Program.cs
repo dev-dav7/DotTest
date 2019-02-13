@@ -3,7 +3,6 @@ using DotTest.VK;
 using DotTest.Processing;
 using VkNet.Enums.Filters;
 using System.Collections.Generic;
-using Newtonsoft.Json;
 using System.Globalization;
 
 namespace DotTest
